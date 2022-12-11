@@ -1,0 +1,21 @@
+[package]
+name = "flatten-flies"
+version = "0.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "..."
+repository = "https://github.com/oovm/sub_projects"
+documentation = "https://docs.rs/sub_projects"
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2021"
+
+[dependencies]
+
+[dependencies.diagnostic-quick]
+version = "0.2.9"
+features = ["walkdir"]
+
+[dev-dependencies]
+
+[features]
+default = []
