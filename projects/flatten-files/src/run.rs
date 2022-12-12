@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use diagnostic_quick::{QResult};
 use diagnostic_quick::error_3rd::WalkDir;
+use diagnostic_quick::QResult;
 
 use crate::FlattenFlies;
 
@@ -26,4 +26,14 @@ fn try_run(cfg: &FlattenFlies, path: &Path) -> QResult {
         }
     }
     Ok(())
+}
+
+
+pub fn is_empty_directory(path: &Path) -> bool {
+    match path.read_dir() {
+        Ok(mut o) => {
+            o.next().is_none()
+        }
+        Err(_) => { false }
+    }
 }

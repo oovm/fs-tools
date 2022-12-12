@@ -13,7 +13,7 @@ edition = "2021"
 
 [dependencies.diagnostic-quick]
 version = "0.3.0"
-features = ["walkdir"]
+features = ["walkdir", "globset"]
 
 [dev-dependencies]
 

@@ -1,6 +1,7 @@
 use self::flatten::FsFlatten;
 
 mod flatten;
+mod utils;
 
 #[derive(Debug, Clone)]
 pub struct FSTools {
