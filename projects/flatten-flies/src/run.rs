@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use diagnostic_quick::{FileID, QResult};
+use diagnostic_quick::{QResult};
 use diagnostic_quick::error_3rd::WalkDir;
 
 use crate::FlattenFlies;
@@ -11,7 +11,7 @@ impl FlattenFlies {
         match try_run(self, path) {
             Ok(_) => {}
             Err(e) => {
-                Err(e.with_file(&FileID::from(path)))
+                Err(e)?
             }
         }
         Ok(())
@@ -20,9 +20,9 @@ impl FlattenFlies {
 
 fn try_run(cfg: &FlattenFlies, path: &Path) -> QResult {
     for entry in WalkDir::new(path) {
-        let entry = entry?.path();
-        if entry.is_file() {
-            println!("file: {} -> {}", cfg.output.display(), entry.display());
+        let entry = entry?;
+        if entry.path().is_file() {
+            println!("file: {} -> {}", cfg.output.display(), entry.into_path().display());
         }
     }
     Ok(())
