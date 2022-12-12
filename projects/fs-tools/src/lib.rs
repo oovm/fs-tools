@@ -21,8 +21,8 @@ pub enum FSCommands {
 
 #[derive(Args, Debug, Clone)]
 pub struct SharedArgs {
-    #[arg(long)]
-    dry_run: bool,
+    #[arg(short, long)]
+    execute: bool,
 }
 
 impl FSTools {
