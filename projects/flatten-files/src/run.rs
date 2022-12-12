@@ -1,3 +1,4 @@
+use std::fs;
 use std::path::Path;
 
 use diagnostic_quick::error_3rd::WalkDir;
@@ -8,7 +9,17 @@ use crate::FlattenFlies;
 impl FlattenFlies {
     pub fn run<P>(&self, input: P) -> QResult where P: AsRef<Path> {
         let path = input.as_ref();
-        match try_run(self, path) {
+        match try_run(self, path, true) {
+            Ok(_) => {}
+            Err(e) => {
+                Err(e)?
+            }
+        }
+        Ok(())
+    }
+    pub fn dry_run<P>(&self, input: P) -> QResult where P: AsRef<Path> {
+        let path = input.as_ref();
+        match try_run(self, path, false) {
             Ok(_) => {}
             Err(e) => {
                 Err(e)?
@@ -18,11 +29,17 @@ impl FlattenFlies {
     }
 }
 
-fn try_run(cfg: &FlattenFlies, path: &Path) -> QResult {
+fn try_run(cfg: &FlattenFlies, path: &Path, execute: bool) -> QResult {
+    let target = cfg.output.as_path();
     for entry in WalkDir::new(path) {
         let entry = entry?;
         if entry.path().is_file() {
-            println!("file: {} -> {}", cfg.output.display(), entry.into_path().display());
+            let source = entry.path();
+            let target = target.join(source.file_name().unwrap());
+            println!("{} -> {}", entry.path().display(), target.display());
+            if execute {
+                fs::rename(source, target)?;
+            }
         }
     }
     Ok(())

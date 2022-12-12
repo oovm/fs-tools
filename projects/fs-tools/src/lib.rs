@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 use diagnostic_quick::{QError, QResult};
 
 use self::cmds::FsFlatten;
@@ -19,7 +19,11 @@ pub enum FSCommands {
     Flatten(Box<FsFlatten>)
 }
 
-pub struct SharedArgs {}
+#[derive(Args, Debug, Clone)]
+pub struct SharedArgs {
+    #[arg(long)]
+    dry_run: bool,
+}
 
 impl FSTools {
     pub fn run(&self) -> QResult<()> {
