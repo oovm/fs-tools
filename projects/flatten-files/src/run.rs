@@ -1,4 +1,4 @@
-use fs::rename;
+use fs::{remove_dir_all, rename};
 use std::ffi::OsStr;
 use std::fs;
 use std::path::Path;
@@ -71,7 +71,7 @@ impl FlattenFlies {
         if self.delete_empty && is_empty_directory(path) {
             println!("[rm] remove {}", path.display());
             if self.execute {
-                fs::remove_dir(path)?;
+                remove_dir_all(path)?;
             }
         }
         Ok(())
