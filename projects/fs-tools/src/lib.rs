@@ -1,18 +1,39 @@
-use self::flatten::FsFlatten;
+use clap::{Parser, Subcommand};
+use diagnostic_quick::{QError, QResult};
 
-mod flatten;
-mod utils;
+use self::cmds::FsFlatten;
 
-#[derive(Debug, Clone)]
+mod cmds;
+pub mod utils;
+
+
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
 pub struct FSTools {
-    sub: Option<FSCommands>,
+    #[command(subcommand)]
+    cmds: Option<FSCommands>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Subcommand, Debug, Clone)]
 pub enum FSCommands {
     Flatten(Box<FsFlatten>)
 }
 
-pub struct SharedArgs {
+pub struct SharedArgs {}
 
+impl FSTools {
+    pub fn run(&self) -> QResult<()> {
+        match &self.cmds {
+            None => {
+                return Err(QError::runtime_error("No command specified"));
+            }
+            Some(cmd) => {
+                match cmd {
+                    FSCommands::Flatten(cmd) => {
+                        cmd.run()
+                    }
+                }
+            }
+        }
+    }
 }
