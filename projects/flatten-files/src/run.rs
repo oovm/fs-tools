@@ -84,6 +84,9 @@ pub fn is_empty_directory(path: &Path) -> bool {
         Ok(mut o) => {
             o.next().is_none()
         }
-        Err(_) => { false }
+        Err(e) => {
+            println!("error: {}", e);
+            false
+        }
     }
 }
