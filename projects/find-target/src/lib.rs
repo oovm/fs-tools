@@ -20,7 +20,7 @@ mod find_file;
 /// # Examples
 ///
 /// ```
-/// use find-target::ensure_directory;
+/// use find_target::ensure_directory;
 /// ```
 pub fn ensure_directory(path: &Path) -> Result<PathBuf> {
     if path.is_dir() {
@@ -46,7 +46,7 @@ pub fn ensure_directory(path: &Path) -> Result<PathBuf> {
 /// # Examples
 ///
 /// ```
-/// use find-target::ensure_file;
+/// use find_target::ensure_file;
 /// ```
 pub fn ensure_file(path: &Path, name: &str) -> Result<PathBuf> {
     if path.is_file() { path.canonicalize() } else { Ok(path.canonicalize()?.join(name)) }

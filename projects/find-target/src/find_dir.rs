@@ -2,7 +2,7 @@ use std::env::current_exe;
 
 use super::*;
 
-/// find_directory
+/// Look for a folder with that name, return error if no such folder.
 ///
 /// # Arguments
 ///
@@ -12,7 +12,9 @@ use super::*;
 /// # Examples
 ///
 /// ```
-/// use find-target::find_directory;
+/// # use find_target::find_directory;
+/// # use std::env::current_dir;
+/// let dir = find_directory(&current_dir().unwrap(), "target").unwrap();
 /// ```
 pub fn find_directory(start: &Path, name: &str) -> Result<PathBuf> {
     let normed = ensure_file(start, name)?;
@@ -24,14 +26,15 @@ pub fn find_directory(start: &Path, name: &str) -> Result<PathBuf> {
                 true => Ok(path),
                 false => Err(Error::from_raw_os_error(22)),
             };
-        } else {
+        }
+        else {
             here = dir;
         }
     }
     Err(Error::from_raw_os_error(20))
 }
 
-/// find_directory_or_create
+/// Look for a folder with that name, if not found, create one in the current directory
 ///
 /// # Arguments
 ///
@@ -41,7 +44,9 @@ pub fn find_directory(start: &Path, name: &str) -> Result<PathBuf> {
 /// # Examples
 ///
 /// ```
-/// find-target::find_directory_or_create;
+/// # use find_target::find_directory_or_create;
+/// # use std::env::current_dir;
+/// let dir = find_directory_or_create(&current_dir().unwrap(), "target").unwrap();
 /// ```
 pub fn find_directory_or_create(start: &Path, name: &str) -> Result<PathBuf> {
     match find_directory(start, name) {
@@ -53,7 +58,6 @@ pub fn find_directory_or_create(start: &Path, name: &str) -> Result<PathBuf> {
     Ok(dir)
 }
 
-
 /// Get the folder where the executable file is located
 ///
 /// # Examples
@@ -63,7 +67,7 @@ pub fn find_directory_or_create(start: &Path, name: &str) -> Result<PathBuf> {
 /// ```
 pub fn this_directory() -> Result<PathBuf> {
     match current_exe()?.canonicalize()?.parent() {
-        Some(s) => { Ok(s.to_path_buf()) }
-        None => { Err(Error::from_raw_os_error(10006)) }
+        Some(s) => Ok(s.to_path_buf()),
+        None => Err(Error::from_raw_os_error(6)),
     }
 }
