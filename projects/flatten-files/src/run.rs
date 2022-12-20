@@ -1,21 +1,23 @@
 use fs::{remove_dir_all, rename};
-use std::ffi::OsStr;
-use std::fs;
-use std::path::Path;
+use std::{
+    ffi::OsStr,
+    fs,
+    path::{Path, PathBuf},
+};
 
-use diagnostic_quick::{QError, QResult};
-use diagnostic_quick::error_3rd::WalkDir;
+use diagnostic_quick::{error_3rd::WalkDir, QError, QResult};
 
 use crate::FlattenFlies;
 
 impl FlattenFlies {
-    pub fn run<P>(&self, input: P) -> QResult where P: AsRef<Path> {
+    pub fn run<P>(&self, input: P) -> QResult
+    where
+        P: AsRef<Path>,
+    {
         let path = input.as_ref();
         match self.try_run(path) {
             Ok(_) => {}
-            Err(e) => {
-                Err(e)?
-            }
+            Err(e) => Err(e)?,
         }
         Ok(())
     }
@@ -25,7 +27,16 @@ impl FlattenFlies {
             let entry = entry?;
             if entry.path().is_file() {
                 let source = entry.path();
-                let target = target.join(source.file_name().unwrap());
+                let target = match source.file_name() {
+                    Some(s) => target.join(s),
+                    None => {
+                        eprintln!("No file name for {}", source.display());
+                        continue;
+                    }
+                };
+                if source.eq(&target) {
+                    continue;
+                }
                 self.safe_rename(source, &target)?;
             }
         }
@@ -42,12 +53,8 @@ impl FlattenFlies {
             self.debug_rename(source, target)?;
         }
         let file_name = match target.file_name().and_then(OsStr::to_str) {
-            None => {
-                Err(QError::runtime_error("target file name is not valid"))?
-            }
-            Some(s) => {
-                s
-            }
+            None => Err(QError::runtime_error("target file name is not valid"))?,
+            Some(s) => s,
         };
         let mut new_id = 1;
         while new_id < 65535 {
@@ -78,16 +85,12 @@ impl FlattenFlies {
     }
 }
 
-
 pub fn is_empty_directory(path: &Path) -> bool {
     match path.read_dir() {
-        Ok(mut o) => {
-            o.next().is_none()
-        }
+        Ok(mut o) => o.next().is_none(),
         Err(e) => {
             println!("error: {}", e);
             false
         }
     }
 }
-
