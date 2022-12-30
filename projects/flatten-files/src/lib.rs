@@ -1,5 +1,7 @@
 use std::path::{Path, PathBuf};
 
+use diagnostic_quick::{QError, QResult};
+
 mod run;
 
 pub struct FlattenFlies {
@@ -10,13 +12,16 @@ pub struct FlattenFlies {
 
 impl FlattenFlies {
     #[inline]
-    pub fn new<P: AsRef<Path>>(output: P) -> Self {
-        debug_assert!(output.as_ref().is_dir());
-        Self {
-            output: output.as_ref().to_path_buf(),
+    pub fn new<P: AsRef<Path>>(output: P) -> QResult<Self> {
+        let path = output.as_ref();
+        if !path.is_dir() {
+            Err(QError::runtime_error(format!("workspace must a dir")))?;
+        }
+        Ok(Self {
+            output: path.canonicalize()?,
             pattern: "*".to_string(),
             delete_empty: false,
-        }
+        })
     }
 }
 

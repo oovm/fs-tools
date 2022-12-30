@@ -1,7 +1,7 @@
 [workspace]
 members = ["projects/*"]
 default-members = [
-    "projects/flatten-flies",
+    "projects/flatten-files",
 ]
 exclude = [
     "projects/.DS_Store",

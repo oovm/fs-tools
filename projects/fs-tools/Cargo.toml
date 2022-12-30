@@ -1,16 +1,25 @@
 [package]
-name = "fs-tools"
+name = "fs-tool"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
-repository = "https://github.com/oovm/sub_projects"
-documentation = "https://docs.rs/fs-tools"
+repository = "https://github.com/oovm/fs-tools"
+documentation = "https://docs.rs/os-tools"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
 
+[[bin]]
+name = "fs"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "4.0.29", features = ["derive"] }
+diagnostic-quick = "0.3.0"
+
+[dependencies.fs-flatten]
+#version = "0.0.0"
+path = "../flatten-files"
 
 [dev-dependencies]
 
