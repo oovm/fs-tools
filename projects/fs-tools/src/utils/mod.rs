@@ -1,6 +1,8 @@
+use std::env::current_dir;
 use std::path::{Path, PathBuf};
 
 use diagnostic_quick::{QError, QResult};
+use diagnostic_quick::error_3rd::{Glob, GlobSet, GlobSetBuilder};
 
 pub fn ensure_workspace<P: AsRef<Path>>(path: P) -> QResult<PathBuf> {
     let path = path.as_ref();
@@ -10,15 +12,26 @@ pub fn ensure_workspace<P: AsRef<Path>>(path: P) -> QResult<PathBuf> {
     Ok(path.canonicalize()?)
 }
 
-fn read_pattern(&self) -> QResult<GlobSet> {
-    let a = GlobSetBuilder::new();
-    a.build()?
+pub fn resolve_workspace(path: &Option<String>) -> QResult<PathBuf> {
+    let path = match path {
+        None => { current_dir()? }
+        Some(s) => { PathBuf::from(s) }
+    };
+    ensure_workspace(path)
+}
 
-    match self.include {
+
+pub fn build_glob_set(include: &Option<String>) -> QResult<GlobSet> {
+    let mut builder = GlobSetBuilder::new();
+    match include {
         None => {
-            return GlobSet::n()
+            builder.add(Glob::new("*")?);
         }
-        Some(s) => {s}
+        Some(s) => {
+            for line in s.trim().lines() {
+                builder.add(Glob::new(line)?);
+            }
+        }
     }
-
+    Ok(builder.build()?)
 }
