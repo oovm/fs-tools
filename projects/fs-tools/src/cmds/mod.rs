@@ -3,6 +3,7 @@ use diagnostic_quick::QResult;
 
 use fs_flatten::FlattenFlies;
 
+use crate::SharedArgs;
 use crate::utils::{build_glob_set, resolve_workspace};
 
 #[derive(Parser, Debug, Clone)]
@@ -16,6 +17,8 @@ pub struct FsFlatten {
     /// Glob pattern of files to move
     #[arg(short, long)]
     pattern: Option<String>,
+    #[clap(flatten)]
+    other: SharedArgs,
 }
 
 
@@ -26,6 +29,7 @@ impl FsFlatten {
             output: ws,
             pattern: build_glob_set(&self.pattern)?,
             delete_empty: self.delete_empty,
+            execute: !self.other.dry_run,
         };
         worker.run(&worker.output)
     }
