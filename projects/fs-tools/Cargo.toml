@@ -4,7 +4,7 @@ version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
 repository = "https://github.com/oovm/fs-tools"
-documentation = "https://docs.rs/os-tools"
+documentation = "https://docs.rs/fs-tools"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
@@ -21,7 +21,7 @@ version = "0.3.0"
 features = ["globset"]
 
 [dependencies.fs-flatten]
-#version = "0.0.0"
+version = "0.0.0"
 path = "../flatten-files"
 
 [dev-dependencies]
