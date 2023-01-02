@@ -17,6 +17,9 @@ pub struct FsFlatten {
     /// Glob pattern of files to move
     #[arg(short, long)]
     pattern: Option<String>,
+    /// Delete all empty folders
+    #[arg(long)]
+    overwrite: bool,
     #[clap(flatten)]
     other: SharedArgs,
 }
@@ -29,7 +32,8 @@ impl FsFlatten {
             output: ws,
             pattern: build_glob_set(&self.pattern)?,
             delete_empty: self.delete_empty,
-            execute: !self.other.dry_run,
+            execute: self.other.execute,
+            overwrite: self.overwrite,
         };
         worker.run(&worker.output)
     }
