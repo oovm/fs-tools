@@ -1,4 +1,4 @@
-use std::{env::current_exe, path::PathBuf};
+use std::env::current_exe;
 
 use find_target::{find_directory, find_directory_or_create};
 

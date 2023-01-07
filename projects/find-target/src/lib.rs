@@ -4,7 +4,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub use find_dir::{find_directory, find_directory_or_create};
+pub use find_dir::{find_directory, find_directory_or_create, this_directory};
 
 mod find_dir;
 mod find_file;

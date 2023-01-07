@@ -1,3 +1,5 @@
+use std::env::current_exe;
+
 use super::*;
 
 /// find_directory
@@ -22,8 +24,7 @@ pub fn find_directory(start: &Path, name: &str) -> Result<PathBuf> {
                 true => Ok(path),
                 false => Err(Error::from_raw_os_error(22)),
             };
-        }
-        else {
+        } else {
             here = dir;
         }
     }
@@ -50,4 +51,19 @@ pub fn find_directory_or_create(start: &Path, name: &str) -> Result<PathBuf> {
     let dir = ensure_directory(start)?.join(name);
     create_dir_all(&dir)?;
     Ok(dir)
+}
+
+
+/// Get the folder where the executable file is located
+///
+/// # Examples
+///
+/// ```
+/// print!("{}", find_target::this_directory().unwrap().display());
+/// ```
+pub fn this_directory() -> Result<PathBuf> {
+    match current_exe()?.canonicalize()?.parent() {
+        Some(s) => { Ok(s.to_path_buf()) }
+        None => { Err(Error::from_raw_os_error(10006)) }
+    }
 }
