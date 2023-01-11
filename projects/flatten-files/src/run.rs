@@ -1,9 +1,5 @@
 use fs::{remove_dir_all, rename};
-use std::{
-    ffi::OsStr,
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{ffi::OsStr, fs, path::Path};
 
 use diagnostic_quick::{error_3rd::WalkDir, QError, QResult};
 
