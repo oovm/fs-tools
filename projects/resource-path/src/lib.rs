@@ -1,33 +1,27 @@
-use std::{
-    fs::create_dir_all,
-    io::{Error, Result},
-    path::{Path, PathBuf},
-};
+use std::path::{Path, PathBuf};
 
-pub use find_dir::{find_directory, find_directory_or_create, this_directory};
+use url::{ParseError, Url};
 
 mod third_party;
 
-use std::{
-    fmt::{Debug, Display, Formatter},
-    str::FromStr,
-};
-
-use serde::{Deserialize, Serialize};
-use url::Url;
-
-use crate::DiffuserError;
-
-
-
-#[derive(Clone, Serialize)]
+/// A path to a resource, either local or remote.
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct ResourcePath {
+    /// The network path to the resource.
     pub network: Url,
+    /// The local path to the resource.
     pub local: PathBuf,
 }
 
-#[test]
-fn test() {
-    let s = "https://api.github.com/a?local=a/b/c";
-    println!("{:?}", ResourcePath::from_str(s))
+impl ResourcePath {
+    /// Creates a new resource path.
+    pub fn with_local<P: AsRef<Path>>(mut self, local: P) -> Self {
+        self.local = local.as_ref().to_path_buf();
+        self
+    }
+    /// Creates a new resource path.
+    pub fn with_network<P: TryInto<Url>>(mut self, network: Url) -> Result<Self, ParseError> {
+        self.network = network;
+        Ok(self)
+    }
 }

@@ -2,6 +2,7 @@
 members = ["projects/*"]
 default-members = [
     "projects/flatten-files",
+    "projects/resource-path",
 ]
 exclude = [
     "projects/.DS_Store",
